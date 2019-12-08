@@ -25,3 +25,23 @@ helloMiddleware.get('/animals/:id', (req, res) => {
 })
 
 exports.helloMiddleware = helloMiddleware
+
+const certainNiceMiddleware = async () => {
+  // some nice logic here
+  return (req, res, next) => {
+    res.headers['from-a-middleware'] = 'true'
+  }
+}
+
+const helloAsyncMiddleware = express()
+
+;(async () => {
+  const mw = await certainNiceMiddleware()
+  helloAsyncMiddleware.use(mw)
+})()
+
+helloAsyncMiddleware.get('/hello', (req, res) => {
+  res.status(200).send('Hello, World! with an async middleware')
+})
+
+exports.helloAsyncMiddleware = helloAsyncMiddleware
